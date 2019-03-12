@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const { Todo, Category, User } = require("./model/todo");
 const app = express();
+const ObjectID = require("bson-objectid");
+
 const PORT = process.env.PORT || 5001;
 
 mongoose
@@ -29,13 +31,20 @@ app.get("/", async (req, res, next) => {
 //   const todos = await Todo.find({});
 //   res.send(todos).status(200);
 // });
-// app.get("/note/:id", async (req, res, next) => {
-//   const todo = await Todo.findById(req.params.id);
-//   res.send(todo).status(200);
-// });
+app.get("/note/:UserId", async (req, res, next) => {
+  const { UserId } = req.params;
+  if (!ObjectID.isValid(UserId))
+    return res.send({ error: "Invalid User Id, Pleas provide a valid user" });
+  let users = await User.findById(UserId);
+  if (!users) return res.send({ err: "Invalid User" }).status(400);
+  const todo = await Todo.find({ UserId });
+  res.send(todo).status(200);
+});
 
 app.get("/note/:userId/:id", async (req, res, next) => {
   const { UserId, Id } = req.params;
+  if (!ObjectID.isValid(UserId))
+    return res.send({ error: "Invalid User Id, Pleas provide a valid user" });
   let users = await User.findById(UserId);
   if (!users) return res.send({ err: "Invalid User" }).status(400);
   const todo = await Todo.find({ userId, _id: Id });
@@ -53,6 +62,8 @@ app.get("/users", async (req, res, next) => {
 });
 app.post("/note/:userId", async (req, res, next) => {
   let UserId = req.params.userId;
+  if (!ObjectID.isValid(UserId))
+    return res.send({ error: "Invalid User Id, Pleas provide a valid user" });
   let users = await User.findById(UserId);
   if (!users) return res.send({ err: "Invalid User" }).status(400);
   let { Title, Category, Content } = req.body;
@@ -68,6 +79,8 @@ app.post("/note/:userId", async (req, res, next) => {
 
 app.patch("/note/:userId/:Id", async (req, res, next) => {
   const { UserId, Id } = req.params;
+  if (!ObjectID.isValid(UserId))
+    return res.send({ error: "Invalid User Id, Pleas provide a valid user" });
   let users = await User.findById(UserId);
   if (!users) return res.send({ err: "Invalid User" }).status(400);
   let todoData = {
@@ -84,6 +97,8 @@ app.patch("/note/:userId/:Id", async (req, res, next) => {
 
 app.delete("/note/:userId/:Id", async (req, res, next) => {
   const { UserId, Id } = req.params;
+  if (!ObjectID.isValid(UserId))
+    return res.send({ error: "Invalid User Id, Pleas provide a valid user" });
   let users = await User.findById(UserId);
   if (!users) return res.send({ err: "Invalid User" }).status(400);
   const todo = await Todo.findById(req.params.id);

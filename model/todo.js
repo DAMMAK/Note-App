@@ -14,7 +14,7 @@ const CategorySchema = new mongoose.Schema({
 });
 
 const UserSchema = new mongoose.Schema({
-  Name: { type: String, required: true }
+  Name: { type: String }
 });
 
 const Todo = mongoose.model("todos", schema);

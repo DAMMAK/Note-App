@@ -3,6 +3,7 @@ const schema = new mongoose.Schema({
   Title: { type: String, required: true },
   Content: { type: String, required: true },
   Category: { type: String, required: true },
+  UserId: { type: String, required: true },
   DateTime: { type: Date, default: Date.now }
 });
 
@@ -19,9 +20,11 @@ const UserSchema = new mongoose.Schema({
 const Todo = mongoose.model("todos", schema);
 const Category = mongoose.model("categories", CategorySchema);
 const User = mongoose.model("users", UserSchema);
+// const PNote = mongoose.model("savedNotes", schema);
 module.exports = {
   Todo,
   Category,
   User
+  // PNote
 };
 // module.exports = mongoose.model("categories", CategorySchema);

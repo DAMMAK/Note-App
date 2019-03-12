@@ -25,18 +25,20 @@ app.get("/", async (req, res, next) => {
   res.send("Welcome to Note App Micro Service");
   console.log("[Todo Object]", Todo);
 });
-app.get("/note", async (req, res, next) => {
-  const todos = await Todo.find({});
-  res.send(todos).status(200);
-});
-app.get("/note/:id", async (req, res, next) => {
-  const todo = await Todo.findById(req.params.id);
-  res.send(todo).status(200);
-});
+// app.get("/note", async (req, res, next) => {
+//   const todos = await Todo.find({});
+//   res.send(todos).status(200);
+// });
+// app.get("/note/:id", async (req, res, next) => {
+//   const todo = await Todo.findById(req.params.id);
+//   res.send(todo).status(200);
+// });
 
 app.get("/note/:userId/:id", async (req, res, next) => {
-  const { userId, Id } = req.params;
-  const todo = await Todo.findById({ userId, _id: Id });
+  const { UserId, Id } = req.params;
+  let users = await User.findById(UserId);
+  if (!users) return res.send({ err: "Invalid User" }).status(400);
+  const todo = await Todo.find({ userId, _id: Id });
   res.send(todo).status(200);
 });
 
@@ -50,20 +52,24 @@ app.get("/users", async (req, res, next) => {
   res.send(users).status(200);
 });
 app.post("/note/:userId", async (req, res, next) => {
-  let userId= req.params.userId;
-  let users =await User.findById(userId);
-  if(!users) res.send({err: "Invalid User"}).status(400);
+  let UserId = req.params.userId;
+  let users = await User.findById(UserId);
+  if (!users) return res.send({ err: "Invalid User" }).status(400);
   let { Title, Category, Content } = req.body;
   let todo = new Todo({
     Title,
     Category,
-    Content
+    Content,
+    UserId
   });
   todo = await todo.save();
   res.send(todo).status(200);
 });
 
-app.patch("/note/:id", async (req, res, next) => {
+app.patch("/note/:userId/:Id", async (req, res, next) => {
+  const { UserId, Id } = req.params;
+  let users = await User.findById(UserId);
+  if (!users) return res.send({ err: "Invalid User" }).status(400);
   let todoData = {
     Title: req.body.Title,
     Category: req.body.Category,
@@ -76,7 +82,10 @@ app.patch("/note/:id", async (req, res, next) => {
   res.send(todo);
 });
 
-app.delete("/note/:id", async (req, res, next) => {
+app.delete("/note/:userId/:Id", async (req, res, next) => {
+  const { UserId, Id } = req.params;
+  let users = await User.findById(UserId);
+  if (!users) return res.send({ err: "Invalid User" }).status(400);
   const todo = await Todo.findById(req.params.id);
   const delTodo = await Todo.deleteOne(todo);
   res.send(delTodo).statusCode(200);

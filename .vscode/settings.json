@@ -1,0 +1,13 @@
+{
+    "peacock.affectActivityBar": true,
+    "peacock.affectStatusBar": true,
+    "peacock.keepBadgeColor": true,
+    "peacock.keepForegroundColor": true,
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#d04649",
+        "titleBar.activeBackground": "#b52e31",
+        "titleBar.inactiveBackground": "#b52e3199",
+        "statusBar.background": "#b52e31",
+        "statusBarItem.hoverBackground": "#d04649"
+    }
+}

@@ -77,7 +77,7 @@ app.post("/note/:userId", async (req, res, next) => {
   res.send(todo).status(200);
 });
 
-app.patch("/note/:userId/:Id", async (req, res, next) => {
+app.put("/note/:userId/:Id", async (req, res, next) => {
   const { UserId, Id } = req.params;
   if (!ObjectID.isValid(UserId))
     return res.send({ error: "Invalid User Id, Pleas provide a valid user" });
@@ -101,8 +101,8 @@ app.delete("/note/:userId/:Id", async (req, res, next) => {
     return res.send({ error: "Invalid User Id, Pleas provide a valid user" });
   let users = await User.findById(UserId);
   if (!users) return res.send({ err: "Invalid User" }).status(400);
-  const todo = await Todo.findById(req.params.id);
-  const delTodo = await Todo.deleteOne(todo);
+  const todo = await Todo.findById(req.params.Id);
+  const delTodo = await Todo.deletfineOne(todo);
   res.send(delTodo).statusCode(200);
 });
 
